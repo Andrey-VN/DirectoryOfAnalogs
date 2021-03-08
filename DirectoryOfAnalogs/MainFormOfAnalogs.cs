@@ -120,8 +120,7 @@ namespace DirectoryOfAnalogs
                 product.Article2 = addManufacture.textBox4.Text;
                 product.Manufacturer2 = addManufacture.textBox5.Text;
                 product.Trust = (int)addManufacture.numericUpDown1.Value;
-
-                db.Products.Add(product);
+              
                 db.SaveChanges();
                 dataGridView1.Refresh();
 
@@ -140,39 +139,36 @@ namespace DirectoryOfAnalogs
 
             Product product = new Product();
 
-            //получение списка всех элементов двух таблиц
-            List<string> left = new List<string>();
-            List<string> right = new List<string>();
+            List<Vertex> vertices = new List<Vertex>();
+            
 
+            //В цикле производится добавление элементов таблицы в список узлов, все элементы по окончанию цикла в листе узлов уникальны!!!
             foreach (var v in db.Products.Local.ToBindingList())
             {
-                left.Add(v.Article1 + " " + v.Manufacturer1);
-                right.Add(v.Article2 + " " + v.Manufacturer2);
+
+                var v1 = vertices.FirstOrDefault(p => p.ToString().Equals(v.Article1 + v.Manufacturer1));
+                if (v1 == null)
+                    vertices.Add(new Vertex(v.Article1, v.Manufacturer1, v.Trust));
+                var v2 = vertices.FirstOrDefault(p => p.ToString().Equals(v.Article2 + v.Manufacturer2));
+                if (v2 == null)
+                    vertices.Add(new Vertex(v.Article2, v.Manufacturer2, v.Trust));
             }
 
-            IEnumerable<string> union = left.Union(right);
 
-            //в вершины добавляются только уникальные строки (производитель+артикул)
-            List<Vertex<string>> vertex = new List<Vertex<string>>();
-            foreach (var i in union)
-            {
-                vertex.Add(new Vertex<string>(i));
-            }
-
-            //добавление строк из таблицы в соответствующие узлы
-            Vertex<string> vertexLeft = null;
-            Vertex<string> vertexRight = null;
+            ////добавление узлов в соответствующие им вершины графа
+            Vertex vertexLeft = null;
+            Vertex vertexRight = null;
             foreach (var v in db.Products.Local.ToBindingList())
             {
-                for (int i = 0; i < vertex.Count; i++)
+                for (int i = 0; i < vertices.Count; i++)
                 {
-                    if ((v.Article1 + " " + v.Manufacturer1).Equals(vertex[i].Number))
+                    if ((vertices[i].Article+vertices[i].Manufacturer).Equals(v.Article1 + v.Manufacturer1))
                     {
-                        vertexLeft = vertex[i];
+                        vertexLeft = vertices[i];
                     }
-                    if ((v.Article2 + " " + v.Manufacturer2).Equals(vertex[i].Number))
+                    if ((vertices[i].Article + vertices[i].Manufacturer).Equals(v.Article2 + v.Manufacturer2))
                     {
-                        vertexRight = vertex[i];
+                        vertexRight = vertices[i];
                     }
                 }
                 graph.Add(vertexLeft, vertexRight);
@@ -186,30 +182,22 @@ namespace DirectoryOfAnalogs
 
             int Trust = Convert.ToInt32(findAConnection.textBox5.Text);
 
-            Route route = new Route();           
+            Route route = new Route();
 
-            Vertex<string> start = default;
-            Vertex<string> finish = default;
-            int count = default;
-            int indexStart = 0;
-
-
-            foreach (var v in vertex)
+            Vertex start = default;
+            Vertex finish = default;
+            foreach (var v in vertices)
             {
-                if (v.Number == Article1 + " " + Manufacturer1)
-                {
+                if (v.Article + v.Manufacturer == Article1 + Manufacturer1)
                     start = v;
-                    indexStart = count;
-                }                   
-                if (v.Number == Article2 + " " + Manufacturer2)
+                if (v.Article + v.Manufacturer == Article2 + Manufacturer2)
                     finish = v;
-                count++;
             }
 
-            List<Vertex<string>> vvv = new List<Vertex<string>> { start };
+            List<Vertex> vvv = new List<Vertex> { start };
 
 
-            if (graph.Wave(start, finish, Trust) & Trust <= vertex.Count & Trust > 0)
+            if (graph.Wave(start, finish, Trust) & Trust <= vertices.Count & Trust > 0)
             {
                 GetVert(vvv, finish, Trust, route);
                 route.ShowDialog(findAConnection);
@@ -228,26 +216,28 @@ namespace DirectoryOfAnalogs
             }
             else
             {
-                MessageBox.Show($"Искомый товар \"{finish.Number}\" не найден за {Trust} шагов.");
-            }           
+                MessageBox.Show($"Искомый товар \"{finish}\" не найден за {Trust} шагов.");
+            }
         }
-        public void GetVert(List<Vertex<string>> vertices, Vertex<string> finish, int iterat, Route route, int count = 1)
+        public void GetVert(List<Vertex> vertices, Vertex finish, int iterat, Route route, int count = 1)
         {
-            List<Vertex<string>> vertices1 = vertices;
-            List<Vertex<string>> vertices2 = new List<Vertex<string>>();
+            List<Vertex> vertices1 = vertices;
+            List<Vertex> vertices2 = new List<Vertex>();
             if (iterat > 0)
             {
-                foreach(var i in vertices1)
+                foreach (var i in vertices1)
                 {
-                    string column1 = $"Маршрут {count}";                   
-                    string column2 = i.Number + "-> ";
+                    string column1 = $"Маршрут {count}";
+                    string column2 = i.Article+" " + i.Manufacturer + "-> ";
 
                     count++;
 
                     foreach (var v in graph.GetVertexList(i))
                     {
-                        column2 += v.Number + "/ ";
-                        if(v.Number.Equals(finish.Number))
+                        if (v == null)
+                            return;
+                        column2 += v.Article + " " + v.Manufacturer + "/ ";
+                        if ((v.Article + " " + v.Manufacturer).Equals(finish.Article + " " + finish.Manufacturer))
                         {
                             route.dataGridView2.Rows.Add(column1, column2);
                             return;
@@ -255,7 +245,7 @@ namespace DirectoryOfAnalogs
                     }
                     vertices2 = graph.GetVertexList(i);
                     route.dataGridView2.Rows.Add(column1, column2);
-                    
+
                     iterat--;
                     GetVert(vertices2, finish, iterat, route, count);
                 }

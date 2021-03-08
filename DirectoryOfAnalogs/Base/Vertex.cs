@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace DirectoryOfAnalogs
@@ -10,21 +11,27 @@ namespace DirectoryOfAnalogs
     /// Вершина графа.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class Vertex<T>
+    public class Vertex
     {
         /// <summary>
         /// Значение вершины графа.
         /// </summary>
-        public T Number { get; set; }
+        
+        public string Article { get; set; }
+        public string Manufacturer { get; set; }
+        public int Trust { get; set; }
 
-        public Vertex(T number)
+        public Vertex(string artic, string manuf, int trust )
         {
-            Number = number;
+            Article = artic;
+            Manufacturer = manuf;
+            Trust = trust;
         }
 
         public override string ToString()
         {
-            return Number.ToString();
+            return Article.ToString() + Manufacturer.ToString();
         }
+
     }
 }

@@ -77,7 +77,7 @@
       <DependentUpon>AddManufacture.cs</DependentUpon>
     </Compile>
     <Compile Include="Base\Product1.cs" />
-    <Compile Include="Logic\Edge.cs" />
+    <Compile Include="Base\Edge.cs" />
     <Compile Include="FindAConnection.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -101,7 +101,7 @@
     <Compile Include="Route.Designer.cs">
       <DependentUpon>Route.cs</DependentUpon>
     </Compile>
-    <Compile Include="Logic\Vertex.cs" />
+    <Compile Include="Base\Vertex.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

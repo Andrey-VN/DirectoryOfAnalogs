@@ -14,15 +14,15 @@ namespace DirectoryOfAnalogs
         /// <summary>
         /// Вершина начала ребра.
         /// </summary>
-        public Vertex<T> From { get; set; }
+        public Vertex From { get; set; }
         /// <summary>
         /// Вершина конца ребра.
         /// </summary>
-        public Vertex<T> To { set; get; }
+        public Vertex To { set; get; }
 
         public int Weight { get; }
 
-        public Edge(Vertex<T> from, Vertex<T> to, int weight = 1)
+        public Edge(Vertex from, Vertex to, int weight = 1)
         {
             From = from;
             To = to;

@@ -15,7 +15,7 @@ namespace DirectoryOfAnalogs
         /// <summary>
         /// Список вершин графа.
         /// </summary>
-        List<Vertex<T>> Vertices = new List<Vertex<T>>();
+        List<Vertex> Vertices = new List<Vertex>();
 
         /// <summary>
         /// Список ребер графа.
@@ -38,7 +38,7 @@ namespace DirectoryOfAnalogs
         /// </summary>
         /// <param name="from">Товар.</param>
         /// <param name="to">Аналог товара.</param>
-        public void Add(Vertex<T> from, Vertex<T> to)
+        public void Add(Vertex from, Vertex to)
         {
             var vert = new Edge<T>(from, to);
             Edges.Add(vert);
@@ -52,10 +52,11 @@ namespace DirectoryOfAnalogs
         /// <param name="vertex">Производитель, по которому идет поиска аналогов.</param>
         /// <returns></returns>
         /// 
-        public List<Vertex<T>> GetVertexList(Vertex<T> vertex)
+        public List<Vertex> GetVertexList(Vertex vertex)
         {
-            
-            var resut = new List<Vertex<T>>();
+            if (vertex.Trust == 0)
+                return null;
+            var resut = new List<Vertex>();
             foreach(var i in Edges)
             {
                 if (i.From.Equals(vertex))
@@ -73,9 +74,9 @@ namespace DirectoryOfAnalogs
         /// <param name="finish"></param>
         /// <param name="numberOfIterations"></param>
         /// <returns></returns>
-        public bool Wave(Vertex<T> start, Vertex<T> finish, int numberOfIterations)
+        public bool Wave(Vertex start, Vertex finish, int numberOfIterations)
         {
-            var list = new List<Vertex<T>>() {start };
+            var list = new List<Vertex>() {start };
 
 
             for (int i = 0; i < numberOfIterations; i++)
