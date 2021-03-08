@@ -11,7 +11,6 @@ namespace DirectoryOfAnalogs
     /// </summary>
     public class Graph<T>
     {
-        
         #region
         /// <summary>
         /// Список вершин графа.
@@ -45,17 +44,21 @@ namespace DirectoryOfAnalogs
             Edges.Add(vert);
         }
 
+        
+
         /// <summary>
         /// Метод поиска аналога по одному производителю;
         /// </summary>
         /// <param name="vertex">Производитель, по которому идет поиска аналогов.</param>
         /// <returns></returns>
+        /// 
         public List<Vertex<T>> GetVertexList(Vertex<T> vertex)
         {
+            
             var resut = new List<Vertex<T>>();
             foreach(var i in Edges)
             {
-                if(i.From == vertex)
+                if (i.From.Equals(vertex))
                 {
                     resut.Add(i.To);
                 }
@@ -63,48 +66,31 @@ namespace DirectoryOfAnalogs
             return resut;
 
         }
-
-        public List<Vertex<T>> WaveList(Vertex<T> start, Vertex<T> finish, int numberOfIterations)
+        /// <summary>
+        /// Проверяет, есть ли искомый товар за введенное число итерации
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="finish"></param>
+        /// <param name="numberOfIterations"></param>
+        /// <returns></returns>
+        public bool Wave(Vertex<T> start, Vertex<T> finish, int numberOfIterations)
         {
-            var list = new List<Vertex<T>>();
+            var list = new List<Vertex<T>>() {start };
 
-            list.Add(start);
 
             for (int i = 0; i < numberOfIterations; i++)
             {
-                Vertex<T> vertex = list[i];
-
-                //Console.Write(vertex.Number + " " + vertex.Number + "-> ");
+                var vertex = list[i];
                 foreach (var v in GetVertexList(vertex))
                 {
                     if (!list.Contains(v))
                     {
-                        list.Add(v);                      
+                        list.Add(v);
                     }
                 }
-                return list;
-            }
-            return list;
-        }
-
-        public bool Wave(Vertex<T> start, Vertex<T> finish, int numberOfIterations)
-        {
-            List<Vertex<T>> list = new List<Vertex<T>>();
-
-            list.Add(start);
-
-            for(int i = 0; i < numberOfIterations; i++)
-            {
-                Vertex<T> vertex = list[i];
-                
-                //Console.Write(vertex.Number + " " + vertex.Number + "-> ");
-                foreach (var v in GetVertexList(vertex))
+                if(list.Count== i+1)
                 {
-                    if(!list.Contains(v))
-                    {
-                        list.Add(v);
-                        //Console.Write(v.Number + " " + v.Number + ", ");
-                    }
+                    return list.Contains(finish);
                 }
             }
             return list.Contains(finish);
