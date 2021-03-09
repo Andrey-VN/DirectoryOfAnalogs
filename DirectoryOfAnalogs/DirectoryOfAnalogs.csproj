@@ -85,7 +85,6 @@
       <DependentUpon>FindAConnection.cs</DependentUpon>
     </Compile>
     <Compile Include="Logic\Graph.cs" />
-    <Compile Include="Logic\ListLogic.cs" />
     <Compile Include="Logic\ProductContext.cs" />
     <Compile Include="MainFormOfAnalogs.cs">
       <SubType>Form</SubType>
@@ -107,8 +106,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="Properties\DataSources\Product.datasource" />
-    <None Include="Properties\DataSources\Product1.datasource" />
-    <None Include="Properties\DataSources\Product2.datasource" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AddManufacture.resx">

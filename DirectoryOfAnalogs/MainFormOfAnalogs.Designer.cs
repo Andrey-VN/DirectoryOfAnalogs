@@ -34,13 +34,13 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.productBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.article1DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.manufacturer1DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.productBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.productBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -106,10 +106,6 @@
             this.dataGridView1.Size = new System.Drawing.Size(543, 262);
             this.dataGridView1.TabIndex = 5;
             // 
-            // productBindingSource
-            // 
-            this.productBindingSource.DataSource = typeof(DirectoryOfAnalogs.Product);
-            // 
             // Column1
             // 
             this.Column1.DataPropertyName = "Id";
@@ -153,6 +149,10 @@
             this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
             this.dataGridViewTextBoxColumn4.ReadOnly = true;
             // 
+            // productBindingSource
+            // 
+            this.productBindingSource.DataSource = typeof(DirectoryOfAnalogs.Product);
+            // 
             // MainFormOfAnalogs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -164,6 +164,7 @@
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Name = "MainFormOfAnalogs";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MainFormOfAnalogs";
             this.Load += new System.EventHandler(this.MainFormOfAnalogs_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();

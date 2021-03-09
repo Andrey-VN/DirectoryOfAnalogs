@@ -54,10 +54,9 @@ namespace DirectoryOfAnalogs
         /// 
         public List<Vertex> GetVertexList(Vertex vertex)
         {
-            if (vertex.Trust == 0)
-                return null;
+
             var resut = new List<Vertex>();
-            foreach(var i in Edges)
+            foreach (var i in Edges)
             {
                 if (i.From.Equals(vertex))
                 {
@@ -84,6 +83,8 @@ namespace DirectoryOfAnalogs
                 var vertex = list[i];
                 foreach (var v in GetVertexList(vertex))
                 {
+                    if (v == null)
+                        return false;
                     if (!list.Contains(v))
                     {
                         list.Add(v);
