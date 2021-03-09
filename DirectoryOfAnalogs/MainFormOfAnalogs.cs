@@ -124,12 +124,12 @@ namespace DirectoryOfAnalogs
                     product.Trust = (int)addManufacture.numericUpDown1.Value;
 
                     db1.SaveChanges();
-                    
 
+                    dataGridView1.Refresh();
                     MessageBox.Show("Объект обновлен");
 
                 }
-                dataGridView1.Refresh();
+                
             }
         }
 
@@ -151,10 +151,10 @@ namespace DirectoryOfAnalogs
             {
                 var v2 = vertices.FirstOrDefault(p => p.ToString().Equals(v.Article2 + v.Manufacturer2));
                 if (v2 == null)
-                    vertices.Add(new Vertex(СonvertedArticle(v.Article2), СonvertedManufacturer(v.Manufacturer2), v.Trust));
+                    vertices.Add(new Vertex(СonvertedManufacturer(СonvertedArticle(v.Article2)), СonvertedManufacturer(v.Manufacturer2), v.Trust));
                 var v1 = vertices.FirstOrDefault(p => p.ToString().Equals(v.Article1 + v.Manufacturer1));
                 if (v1 == null)
-                    vertices.Add(new Vertex(СonvertedArticle(v.Article1), СonvertedManufacturer(v.Manufacturer1), 2));
+                    vertices.Add(new Vertex(СonvertedManufacturer(СonvertedArticle(v.Article1)), СonvertedManufacturer(v.Manufacturer1), 2));
             }
 
 
@@ -165,11 +165,11 @@ namespace DirectoryOfAnalogs
             {
                 for (int i = 0; i < vertices.Count; i++)
                 {
-                    if ((vertices[i].Article + vertices[i].Manufacturer).Equals(СonvertedArticle(v.Article1) + СonvertedManufacturer(v.Manufacturer1)))
+                    if ((vertices[i].Article + vertices[i].Manufacturer).Equals(СonvertedManufacturer((СonvertedArticle(v.Article1))) + СonvertedManufacturer(v.Manufacturer1)))
                     {
                         vertexLeft = vertices[i];
                     }
-                    if ((vertices[i].Article + vertices[i].Manufacturer).Equals(СonvertedArticle(v.Article2) + СonvertedManufacturer(v.Manufacturer2)))
+                    if ((vertices[i].Article + vertices[i].Manufacturer).Equals(СonvertedManufacturer((СonvertedArticle(v.Article2))) + СonvertedManufacturer(v.Manufacturer2)))
                     {
                         vertexRight = vertices[i];
                     }
@@ -178,10 +178,10 @@ namespace DirectoryOfAnalogs
             }
 
             // ввод значений в поиск аналогов 
-            string Article1 = СonvertedArticle(findAConnection.textBox1.Text);
+            string Article1 = СonvertedManufacturer((СonvertedArticle(findAConnection.textBox1.Text)));
             string Manufacturer1 = СonvertedManufacturer(findAConnection.textBox2.Text);
 
-            string Article2 = СonvertedArticle(findAConnection.textBox3.Text);
+            string Article2 = СonvertedManufacturer(СonvertedArticle(findAConnection.textBox3.Text));
             string Manufacturer2 = СonvertedManufacturer(findAConnection.textBox4.Text);
 
             int Trust = (int)findAConnection.numericUpDown1.Value;
