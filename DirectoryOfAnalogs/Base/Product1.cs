@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace DirectoryOfAnalogs
 {
+    /// <summary>
+    /// Таблица с данными исходных товаров и их аналогов
+    /// </summary>
     public class Product
     {
 

@@ -9,17 +9,19 @@ namespace DirectoryOfAnalogs
     /// <summary>
     /// Ребро графа.
     /// </summary>
-    public class Edge<T>
+    public class Edge
     {
         /// <summary>
-        /// Вершина начала ребра.
+        /// Вершина начала ребра(Исходный товар).
         /// </summary>
         public Vertex From { get; set; }
         /// <summary>
-        /// Вершина конца ребра.
+        /// Вершина конца ребра(Искомый товар).
         /// </summary>
         public Vertex To { set; get; }
-
+        /// <summary>
+        /// Вершина конца ребра(Доверие).
+        /// </summary>
         public int Weight { get; }
 
         public Edge(Vertex from, Vertex to, int weight = 1)

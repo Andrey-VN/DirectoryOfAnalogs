@@ -85,7 +85,7 @@
       <DependentUpon>FindAConnection.cs</DependentUpon>
     </Compile>
     <Compile Include="Logic\Graph.cs" />
-    <Compile Include="Logic\ProductContext.cs" />
+    <Compile Include="Base\ProductContext.cs" />
     <Compile Include="MainFormOfAnalogs.cs">
       <SubType>Form</SubType>
     </Compile>

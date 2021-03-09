@@ -8,29 +8,31 @@ using System.Threading.Tasks;
 namespace DirectoryOfAnalogs
 {
     /// <summary>
-    /// Вершина графа.
+    /// Вершина графа №Артикул+производитель".
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class Vertex
     {
-        /// <summary>
-        /// Значение вершины графа.
-        /// </summary>
-        
-        public string Article { get; set; }
-        public string Manufacturer { get; set; }
-        public int Trust { get; set; }
 
-        public Vertex(string artic, string manuf, int trust )
+        /// <summary>
+        /// Артикул узла.
+        /// </summary>
+        public string Article { get; set; }
+
+        /// <summary>
+        /// Продукт узла.
+        /// </summary>
+        public string Manufacturer { get; set; }
+
+        public Vertex(string artic, string manuf)
         {
             Article = artic;
             Manufacturer = manuf;
-            Trust = trust;
         }
 
         public override string ToString()
         {
-            return Article.ToString() + Manufacturer.ToString();
+            return Article.ToString() +" " + Manufacturer.ToString();
         }
 
     }

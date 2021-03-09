@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,17 +21,8 @@ namespace DirectoryOfAnalogs
         /// <summary>
         /// Список ребер графа.
         /// </summary>
-        List<Edge<T>> Edges = new List<Edge<T>>();
+        List<Edge> Edges = new List<Edge>();
 
-        /// <summary>
-        /// Количество вершин.
-        /// </summary>
-        public int VertexCount => Vertices.Count;
-
-        /// <summary>
-        /// Количество ребер.
-        /// </summary>
-        public int EdgeCount => Edges.Count;
         #endregion
 
         /// <summary>
@@ -38,64 +30,105 @@ namespace DirectoryOfAnalogs
         /// </summary>
         /// <param name="from">Товар.</param>
         /// <param name="to">Аналог товара.</param>
-        public void Add(Vertex from, Vertex to)
+        public void Add(Vertex from, Vertex to, int weight)
         {
-            var vert = new Edge<T>(from, to);
+            var vert = new Edge(from, to, weight);
             Edges.Add(vert);
         }
 
-        
-
         /// <summary>
-        /// Метод поиска аналога по одному производителю;
+        /// Метод поиска аналога по одному производителю.
         /// </summary>
         /// <param name="vertex">Производитель, по которому идет поиска аналогов.</param>
         /// <returns></returns>
         /// 
         public List<Vertex> GetVertexList(Vertex vertex)
         {
+            List<Vertex> resut = new List<Vertex>();
 
-            var resut = new List<Vertex>();
             foreach (var i in Edges)
             {
-                if (i.From.Equals(vertex))
+                if (i.From.ToString() == vertex.ToString())
                 {
                     resut.Add(i.To);
                 }
+
             }
             return resut;
 
         }
         /// <summary>
+        /// Метод проверки ребра на нулевое значение "доверия".
+        /// </summary>
+        /// <param name="vert1">Узел "Из".</param>
+        /// <param name="vert2">Узел "В".</param>
+        /// <returns></returns>
+        public bool TrustZero(Vertex vert1, Vertex vert2)
+        {
+            foreach (var i in Edges)
+            {
+                if (i.From.ToString() == vert1.ToString() & i.To.ToString() == vert2.ToString())
+                {
+                    if (i.Weight == 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Проверяет, есть ли искомый товар за введенное число итерации
         /// </summary>
-        /// <param name="start"></param>
-        /// <param name="finish"></param>
-        /// <param name="numberOfIterations"></param>
+        /// <param name="start">Узел исходного товара, с которого начинается поиск.</param>
+        /// <param name="finish">Узел искомого значения.</param>
+        /// <param name="numberOfIterations">Количество итерации.</param>
         /// <returns></returns>
-        public bool Wave(Vertex start, Vertex finish, int numberOfIterations)
+        public Dictionary<Vertex,List<Vertex>> Wave(Vertex start, Vertex finish, int numberOfIterations)
         {
-            var list = new List<Vertex>() {start };
+            Dictionary<Vertex, List<Vertex>> dic = new Dictionary<Vertex, List<Vertex>>();
 
+            List<Vertex> list = new List<Vertex>() { start };
+            
 
             for (int i = 0; i < numberOfIterations; i++)
             {
+                List<Vertex> item = new List<Vertex>();
                 var vertex = list[i];
-                foreach (var v in GetVertexList(vertex))
+                var getVertexList = GetVertexList(vertex);
+                foreach (var v in getVertexList)
                 {
-                    if (v == null)
-                        return false;
-                    if (!list.Contains(v))
-                    {
-                        list.Add(v);
-                    }
+                    if(!list.Contains(v))
+                    {   //условие проверки на нулевое доверие
+                        if(!TrustZero(vertex, v))
+                        {
+                            list.Add(v);
+                        }
+                        //если искомый товар один и доверие равно нулю, то прерывается итерация и возвращается значение
+                        else if (TrustZero(vertex, v) & getVertexList.Count == 1)
+                        {
+                            item.Add(v);
+                            dic.Add(vertex, item);
+                            return dic;
+                        }
+                        item.Add(v);                      
+                    }                    
                 }
-                if(list.Count== i+1)
+                
+                dic.Add(vertex, item);
+                //если товар найден
+                if(item.Contains(finish))
                 {
-                    return list.Contains(finish);
+                    return dic;
+                }
+                //если товар не найден найден, то возвращает null
+                if (list.Count == i + 1)
+                {
+                    return null;
                 }
             }
-            return list.Contains(finish);
+            return null;
         }
 
     }
