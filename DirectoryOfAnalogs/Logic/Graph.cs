@@ -100,28 +100,29 @@ namespace DirectoryOfAnalogs
                 foreach (var v in getVertexList)
                 {
                     if(!list.Contains(v))
-                    {   //условие проверки на нулевое доверие
-                        if(!TrustZero(vertex, v))
+                    {
+                      
+                        //условие проверки на нулевое доверие, если оно равно нулю, то значение в лист не присваиваем. Лист нужен для итерации, чтобы проверять ключи метода на наличие их значений
+                        if (!TrustZero(vertex, v))
                         {
                             list.Add(v);
-                        }
-                        //если искомый товар один и доверие равно нулю, то прерывается итерация и возвращается значение
-                        else if (TrustZero(vertex, v) & getVertexList.Count == 1)
+                        }  
+
+                        //добавление значений в лист, которые будут выведены значением ключа текущего метода. 
+                        item.Add(v);
+                        //поиск искомого товара из списка
+                        Vertex str = item.FirstOrDefault(p => p.Article + p.Manufacturer == finish.Article + finish.Manufacturer);
+                        //если товар найден, то прерываем итерацию и возвращаем значение
+                        if (str!=null)
                         {
-                            item.Add(v);
                             dic.Add(vertex, item);
                             return dic;
                         }
-                        item.Add(v);                      
                     }                    
                 }
-                
+
+
                 dic.Add(vertex, item);
-                //если товар найден
-                if(item.Contains(finish))
-                {
-                    return dic;
-                }
                 //если товар не найден найден, то возвращает null
                 if (list.Count == i + 1)
                 {
