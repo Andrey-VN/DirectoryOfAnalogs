@@ -1,136 +1,175 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace DirectoryOfAnalogs
 {
     /// <summary>
     /// Граф.
     /// </summary>
-    public class Graph<T>
+    public class Graph
     {
-        #region
         /// <summary>
-        /// Список вершин графа.
+        /// Список вершин.
         /// </summary>
-        List<Vertex> Vertices = new List<Vertex>();
+        public List<Vertex> Vertices { get; }
 
         /// <summary>
-        /// Список ребер графа.
+        /// Список ребер.
         /// </summary>
-        List<Edge> Edges = new List<Edge>();
+        public List<Edge> Edges { get; }
 
-        #endregion
-
-        /// <summary>
-        /// Метод добавления вершин ребра товара и его аналога.
-        /// </summary>
-        /// <param name="from">Товар.</param>
-        /// <param name="to">Аналог товара.</param>
-        public void Add(Vertex from, Vertex to, int weight)
+        public Graph()
         {
-            var vert = new Edge(from, to, weight);
-            Edges.Add(vert);
+            Vertices = new List<Vertex>();
+            Edges = new List<Edge>();
+        }
+        public void Add(string from, string to, int weight)
+        {
+            GetVertexInEdge(from, to, out Vertex v1, out Vertex v2);
+
+            AddVertex(v1, v2);                    //добавление вершин в список вершин
+            Edges.Add(new Edge(v1, v2, weight));  //добавление вершин в ребро
+        }
+
+        private void GetVertexInEdge(string from, string to, out Vertex v1, out Vertex v2)
+        {
+            v1 = Vertices.FirstOrDefault(p => p.Item == from);
+            v2 = Vertices.FirstOrDefault(p => p.Item == to);
+            if (v1 == null) { v1 = new Vertex(from); }  //если нет вершин с добавляемыми вершинами, то добавляем
+            if (v2 == null) { v2 = new Vertex(to); }
         }
 
         /// <summary>
-        /// Метод поиска аналога по одному производителю.
+        /// Добавление значений в список вершин.
         /// </summary>
-        /// <param name="vertex">Производитель, по которому идет поиска аналогов.</param>
-        /// <returns></returns>
-        /// 
-        public List<Vertex> GetVertexList(Vertex vertex)
+        /// <param name="verFrom"></param>
+        /// <param name="vertTo"></param>
+        private void AddVertex(Vertex verFrom, Vertex vertTo)
         {
-            List<Vertex> resut = new List<Vertex>();
-
-            foreach (var i in Edges)
-            {
-                if (i.From.ToString() == vertex.ToString())
-                {
-                    resut.Add(i.To);
-                }
-
-            }
-            return resut;
-
+            Vertices.Add(verFrom);
+            Vertices.Add(vertTo);
         }
         /// <summary>
-        /// Метод проверки ребра на нулевое значение "доверия".
+        /// Проверка на наличие значения в имеюзихся вершинах, если вершин нет, то возвращаем null.
         /// </summary>
-        /// <param name="vert1">Узел "Из".</param>
-        /// <param name="vert2">Узел "В".</param>
+        /// <param name="str"></param>
         /// <returns></returns>
-        public bool TrustZero(Vertex vert1, Vertex vert2)
+        public Vertex GetVertOrNull(string str)
         {
-            foreach (var i in Edges)
+            foreach (var i in Vertices)
             {
-                if (i.From.ToString() == vert1.ToString() & i.To.ToString() == vert2.ToString())
-                {
-                    if (i.Weight == 0)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Проверяет, есть ли искомый товар за введенное число итерации
-        /// </summary>
-        /// <param name="start">Узел исходного товара, с которого начинается поиск.</param>
-        /// <param name="finish">Узел искомого значения.</param>
-        /// <param name="numberOfIterations">Количество итерации.</param>
-        /// <returns></returns>
-        public Dictionary<Vertex,List<Vertex>> Wave(Vertex start, Vertex finish, int numberOfIterations)
-        {
-            Dictionary<Vertex, List<Vertex>> dic = new Dictionary<Vertex, List<Vertex>>();
-
-            List<Vertex> list = new List<Vertex>() { start };
-            
-
-            for (int i = 0; i < numberOfIterations; i++)
-            {
-                List<Vertex> item = new List<Vertex>();
-                var vertex = list[i];
-                var getVertexList = GetVertexList(vertex);
-                foreach (var v in getVertexList)
-                {
-                    if(!list.Contains(v))
-                    {
-                      
-                        //условие проверки на нулевое доверие, если оно равно нулю, то значение в лист не присваиваем. Лист нужен для итерации, чтобы проверять ключи метода на наличие их значений
-                        if (!TrustZero(vertex, v))
-                        {
-                            list.Add(v);
-                        }  
-
-                        //добавление значений в лист, которые будут выведены значением ключа текущего метода. 
-                        item.Add(v);
-                        //поиск искомого товара из списка
-                        Vertex str = item.FirstOrDefault(p => p.Article + p.Manufacturer == finish.Article + finish.Manufacturer);
-                        //если товар найден, то прерываем итерацию и возвращаем значение
-                        if (str!=null)
-                        {
-                            dic.Add(vertex, item);
-                            return dic;
-                        }
-                    }                    
-                }
-
-
-                dic.Add(vertex, item);
-                //если товар не найден найден, то возвращает null
-                if (list.Count == i + 1)
-                {
-                    return null;
-                }
+                if (i.Item.Equals(str))
+                    return i;
             }
             return null;
         }
+
+        /// <summary>
+        /// Метод поиска всех возможных маршрутов искомого аналога.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="finish"></param>
+        /// <param name="numberOfIterations"></param>
+        /// <returns></returns>
+        public Dictionary<string, Dictionary<Vertex, Vertex>> BFS(string start, string finish, int numberOfIterations)
+        {
+            List<Vertex> isVisited = new List<Vertex>();                                                                   //лист с посещенными вершинами
+            Dictionary<Vertex, Vertex> pathList = new Dictionary<Vertex, Vertex>();                                        //словарь с найденными товарами - ключ и их аналогов - значение
+            Dictionary<string, Dictionary<Vertex, Vertex>> listOut = new Dictionary<string, Dictionary<Vertex, Vertex>>(); //вывод номера маршрута и листа его значения
+
+            if (GetVertOrNull(start) == null || GetVertOrNull(finish) == null)                                             //проверка на наличие в вершинах введенных товаров, если их нет, то будет возвращен пустой лист
+                return listOut;
+
+            pathList[GetVertOrNull(start)] = null; 
+
+            int countIteration = 0;  //текущий шаг рекурсии
+            int numberRoute = 0;     //номер текущего маршрута
+
+            return PrintAllPathsUtil(GetVertOrNull(start), 
+                GetVertOrNull(finish), 
+                isVisited, 
+                pathList, 
+                numberOfIterations, 
+                countIteration, ref numberRoute, listOut);
+        }
+        /// <summary>
+        /// Рекурсивный метод поиска аналогов.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="finish"></param>
+        /// <param name="numberOfIterations"></param>
+        /// <returns></returns>
+        private Dictionary<string, Dictionary<Vertex, Vertex>> PrintAllPathsUtil(Vertex u, Vertex d,
+                               List<Vertex> isVisited,
+                               Dictionary<Vertex, Vertex> localPathList,
+                               int numberOfIterations,
+                               int countIteration,
+                               ref int numberRoute,
+                               Dictionary<string, Dictionary<Vertex, Vertex>> listOut)
+        {
+
+            if (countIteration == numberOfIterations + 1) //если количество рекурсий равно заданному
+                return listOut;
+            countIteration++;
+
+
+            if (u.Equals(d) || IsTrustZero(u))   //если аналог найден или аналог равен нулю
+            {
+                var Dcopy = new Dictionary<Vertex, Vertex>();
+
+                foreach (var e in localPathList) { Dcopy.Add(e.Key, e.Value); }
+                numberRoute++;
+                listOut.Add("Маршрут " + numberRoute, Dcopy);
+                return listOut;
+            }
+
+            isVisited.Add(u);   //добавляем исследуемый товар в список просмотренных
+
+            foreach (var i in GetVertex(u))
+            {
+                if (!isVisited.Contains(i))  //проверка, просмотрен ли товар до этого
+                {
+                    localPathList[u] = i;
+                    PrintAllPathsUtil(i, d, isVisited,
+                                      localPathList, numberOfIterations, countIteration, ref numberRoute, listOut);
+                    localPathList.Remove(u);   
+                }
+            }
+
+            isVisited.Remove(u);
+            return listOut;
+        }
+        /// <summary>
+        /// Проверка на нулевое доверие.
+        /// </summary>
+        /// <param name="vert"></param>
+        /// <returns></returns>
+        private bool IsTrustZero(Vertex vert)
+        {
+            foreach (var i in Edges)
+            {
+                if (i.To.Equals(vert) & i.Weight == 0)
+                    return true;
+            }
+            return false;
+        }
+        /// <summary>
+        /// Поиск вершин ребра по искомой вершине.
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <returns></returns>
+        private List<Vertex> GetVertex(Vertex vertex)
+        {
+            List<Vertex> vert = new List<Vertex>();
+            foreach (var i in Edges)
+            {
+                if (i.From == vertex)
+                    vert.Add(i.To);
+            }
+            return vert;
+        }
+
 
     }
 }

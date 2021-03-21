@@ -13,27 +13,11 @@ namespace DirectoryOfAnalogs
     /// <typeparam name="T"></typeparam>
     public class Vertex
     {
+        public string Item { get; }
 
-        /// <summary>
-        /// Артикул узла.
-        /// </summary>
-        public string Article { get; set; }
-
-        /// <summary>
-        /// Продукт узла.
-        /// </summary>
-        public string Manufacturer { get; set; }
-
-        public Vertex(string artic, string manuf)
+        public Vertex(string item)
         {
-            Article = artic;
-            Manufacturer = manuf;
+            Item = item;
         }
-
-        public override string ToString()
-        {
-            return Article.ToString() +" " + Manufacturer.ToString();
-        }
-
     }
 }

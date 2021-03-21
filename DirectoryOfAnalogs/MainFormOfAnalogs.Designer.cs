@@ -168,7 +168,6 @@
             this.Name = "MainFormOfAnalogs";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MainFormOfAnalogs";
-            this.Load += new System.EventHandler(this.MainFormOfAnalogs_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.productBindingSource)).EndInit();
             this.ResumeLayout(false);
@@ -180,11 +179,6 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn article2DataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn manufacturer2DataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn trustDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn product1DataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.BindingSource productBindingSource;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;

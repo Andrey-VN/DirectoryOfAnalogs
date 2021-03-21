@@ -24,16 +24,13 @@ namespace DirectoryOfAnalogs
         /// </summary>
         public int Weight { get; }
 
-        public Edge(Vertex from, Vertex to, int weight = 1)
+        public Edge(Vertex from, Vertex to, int weight)
         {
             From = from;
             To = to;
             Weight = weight;
         }
 
-        public override string ToString()
-        {
-            return $"{From}, {To}";
-        }
+        
     }
 }
